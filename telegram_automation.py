@@ -31,9 +31,11 @@ def credenciais_google():
         "https://spreadsheets.google.com/feeds",
         "https://www.googleapis.com/auth/drive"
     ]
-    json_str = os.getenv("GOOGLE_CREDENTIALS_JSON")
-    info = json.loads(json_str)
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(info, scopes)
+
+    creds = ServiceAccountCredentials.from_json_keyfile_name(
+        os.getenv("GOOGLE_APPLICATION_CREDENTIALS"), scopes
+    )
+
     client = gspread.authorize(creds)
 
     planilha_completa = client.open(
@@ -182,6 +184,7 @@ def enviar_para_planilha(respostas, dados_csv):
 # ---- Main ----
 if __name__ == "__main__":
     keep_alive()  # Manter ativo no Replit
+    print(os.getenv("BOT_TOKEN"))
     app = ApplicationBuilder().token(os.getenv("BOT_TOKEN")).build()
 
     conv_handler = ConversationHandler(
